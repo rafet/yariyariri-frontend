@@ -26,7 +26,7 @@
     <b-col cols="12" class="mt-2">
       <b-input
         ref="artist"
-        v-model="data.spotifyURL"
+        v-model="data.spotifyLink"
         placeholder="Spotify URL"
         class="lyric-input"
       ></b-input>
@@ -41,7 +41,7 @@ export default {
         artist: null,
         songName: null,
         lyric: null,
-        spotifyURL: null
+        spotifyLink: null
       }
     };
   },
@@ -53,6 +53,9 @@ export default {
       this.$emit("input", this.data);
     },
     "data.lyric"() {
+      this.$emit("input", this.data);
+    },
+    "data.spotifyLink"() {
       this.$emit("input", this.data);
     }
   }

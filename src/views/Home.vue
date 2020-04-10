@@ -108,7 +108,7 @@ export default {
       this.newLyric.artist = null;
       this.newLyric.songName = null;
       this.newLyric.lyric = null;
-      this.newLyric.spotifyURL = null;
+      this.newLyric.spotifyLink = null;
       this.loading = false;
     }
   }
