@@ -56,7 +56,7 @@
             md="10"
             style="padding-bottom:120px !important"
           >
-            <transition-group name="list" tag="p">
+            <transition-group name="list" tag="div">
               <SingleLyric
                 v-for="(item, index) in quotes"
                 class="list-item"
@@ -137,10 +137,6 @@ export default {
   opacity: 0;
 }
 
-.list-item {
-  display: inline-block;
-  margin-right: 10px;
-}
 .list-enter-active,
 .list-leave-active {
   transition: all 0.5s;
