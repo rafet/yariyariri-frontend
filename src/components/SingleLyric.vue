@@ -1,25 +1,102 @@
 <template>
   <b-row align-v="center" class="lyric-card effect2">
-    <b-col cols="3" class="artist">{{ artist }}</b-col>
-    <b-col cols="3" class="track">{{ track }}</b-col>
-    <b-col class="lyric" cols="6">{{ lyric }}</b-col>
+    <b-col cols="3" class="artist">
+      <contenteditable
+        :class="{ 'edit-mode': editMode }"
+        tag="div"
+        :contenteditable="editMode"
+        v-model="post.artist"
+        :noNL="true"
+      />
+    </b-col>
+    <b-col cols="3" class="track">
+      <contenteditable
+        :class="{ 'edit-mode': editMode }"
+        tag="div"
+        :contenteditable="editMode"
+        v-model="post.songName"
+        :noNL="true"
+      />
+    </b-col>
+    <b-col cols="5">
+      <contenteditable
+        class="lyric"
+        :class="{ 'edit-mode': editMode }"
+        tag="div"
+        :contenteditable="editMode"
+        v-model="post.lyric"
+        :noNL="true"
+      />
+    </b-col>
+    <b-col class="icons" cols="1">
+      <b-icon
+        v-if="!editMode"
+        icon="pencil"
+        class="mr-2"
+        @click="
+          () => {
+            editMode = true;
+            editPost = { ...post };
+          }
+        "
+      ></b-icon>
+      <b-icon
+        v-else
+        icon="check"
+        class="mr-2"
+        style="color:#55efc4"
+        @click="save()"
+      ></b-icon>
+      <b-icon icon="x" v-if="!editMode" @click="delPost()"></b-icon>
+      <span
+        v-else
+        style="font-size:12px;cursor:pointer"
+        @click="
+          () => {
+            editMode = false;
+            post = { ...editPost };
+          }
+        "
+        >İptal
+      </span>
+    </b-col>
+    <div class="w-100"></div>
+    <b-col cols="12" class="mt-3" v-if="editMode">
+      <contenteditable
+        :class="{ 'edit-mode': editMode }"
+        class="artist"
+        tag="div"
+        :contenteditable="editMode"
+        v-model="post.spotifyLink"
+        :noNL="true"
+      />
+    </b-col>
   </b-row>
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   props: {
-    lyric: {
-      type: String,
-      default: "[QUOTE]"
+    post: {
+      type: Object,
+      default: null
+    }
+  },
+  data() {
+    return {
+      editPost: null,
+      editMode: false
+    };
+  },
+  methods: {
+    ...mapActions(["deletePost", "updatePost"]),
+    async delPost() {
+      await this.deletePost(this.post._id);
     },
-    artist: {
-      type: String,
-      default: "[ARTIST]"
-    },
-    track: {
-      type: String,
-      default: "[TRACK]"
+    async save() {
+      await this.updatePost({ postId: this.post._id, changes: this.post });
+      this.editMode = false;
     }
   }
 };
@@ -34,6 +111,7 @@ export default {
   font-family: "Tillana", cursive;
   color: white;
   font-size: 1.1rem;
+  word-wrap: break-word;
 }
 .lyric-card {
   background: #80133677;
@@ -52,5 +130,15 @@ export default {
     0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06),
     0 22.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086),
     0 100px 80px rgba(0, 0, 0, 0.12);
+}
+.icons {
+  color: white;
+}
+.icons svg {
+  cursor: pointer;
+}
+
+.edit-mode {
+  border-bottom: 1px solid white;
 }
 </style>

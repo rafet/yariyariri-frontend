@@ -8,12 +8,12 @@
           <b-col cols="auto">
             <b-button
               size="lg"
-              v-if="!editMode"
+              v-if="!newPostMode"
               style="border:0;background:#fafafa;color:black"
               pill
               @click="toggle"
             >
-              <b-icon :icon="editMode ? 'check' : 'plus'"></b-icon>
+              <b-icon :icon="newPostMode ? 'check' : 'plus'"></b-icon>
 
               Söz Ekle
             </b-button>
@@ -27,7 +27,7 @@
             >
               <b-icon
                 v-if="!loading"
-                :icon="editMode ? 'check' : 'plus'"
+                :icon="newPostMode ? 'check' : 'plus'"
               ></b-icon>
               <b-spinner v-else small></b-spinner>
 
@@ -35,8 +35,8 @@
             </b-button>
             <b-button
               size="small"
-              v-if="editMode"
-              @click="editMode = false"
+              v-if="newPostMode"
+              @click="newPostMode = false"
               style="border:0;color:white"
               variant="default"
               pill
@@ -61,14 +61,12 @@
                 v-for="(item, index) in posts"
                 class="list-item"
                 :key="index"
-                :lyric="item.lyric"
-                :artist="item.artist"
-                :track="item.songName"
+                :post="item"
               />
             </transition-group>
 
             <transition name="fade">
-              <AddLyric v-model="newLyric" class="add-q" v-if="editMode" />
+              <AddLyric v-model="newLyric" class="add-q" v-if="newPostMode" />
             </transition>
           </b-col>
         </b-row>
@@ -86,7 +84,7 @@ export default {
   data() {
     return {
       loading: false,
-      editMode: false,
+      newPostMode: false,
       newLyric: null
     };
   },
@@ -100,7 +98,7 @@ export default {
   methods: {
     ...mapActions(["listPosts", "createPost"]),
     toggle() {
-      this.editMode = !this.editMode;
+      this.newPostMode = !this.newPostMode;
     },
     async saveLyric() {
       this.loading = true;
