@@ -1,6 +1,6 @@
 <template>
-  <b-row align-v="center" class="lyric-card effect2">
-    <b-col cols="3" class="artist">
+  <b-row align-v="center" class="lyric-card effect2 grow">
+    <b-col cols="2" class="artist">
       <contenteditable
         :class="{ 'edit-mode': editMode }"
         tag="div"
@@ -18,7 +18,7 @@
         :noNL="true"
       />
     </b-col>
-    <b-col cols="5">
+    <b-col>
       <contenteditable
         class="lyric"
         :class="{ 'edit-mode': editMode }"
@@ -28,40 +28,51 @@
         :noNL="true"
       />
     </b-col>
-    <b-col class="icons" cols="1">
-      <b-icon
-        v-if="!editMode"
-        icon="pencil"
-        class="mr-2"
-        @click="
-          () => {
-            editMode = true;
-            editPost = { ...post };
-          }
-        "
-      ></b-icon>
-      <b-icon
-        v-else
-        icon="check"
-        class="mr-2"
-        style="color:#55efc4"
-        @click="save()"
-      ></b-icon>
-      <b-icon icon="x" v-if="!editMode" @click="delPost()"></b-icon>
-      <span
-        v-else
-        style="font-size:12px;cursor:pointer"
-        @click="
-          () => {
-            editMode = false;
-            post = { ...editPost };
-          }
-        "
-        >İptal
-      </span>
+    <b-col class="icon" cols="auto">
+      <b-button-group size="sm">
+        <b-button
+          variant="transparent"
+          v-if="!editMode"
+          @click="
+            () => {
+              editMode = true;
+              editPost = { ...post };
+            }
+          "
+        >
+          <b-icon icon="pencil" class="icon"></b-icon>
+        </b-button>
+        <b-button v-else @click="save()">
+          <b-icon icon="check" style="color:#55efc4"></b-icon>
+        </b-button>
+
+        <b-button variant="transparent" v-if="!editMode" @click="play">
+          <!-- <b-icon icon="play-fill" class="icon"></b-icon> -->
+          <img
+            style="width:20px;color:white"
+            src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg"
+            alt=""
+          />
+        </b-button>
+        <b-button variant="transparent" v-if="!editMode" @click="delPost()">
+          <b-icon icon="x" class="icon"></b-icon>
+        </b-button>
+        <b-button
+          variant="transparent"
+          v-else
+          @click="
+            () => {
+              editMode = false;
+              post = { ...editPost };
+            }
+          "
+        >
+          <span style="font-size:12px;cursor:pointer" class="icon">İptal</span>
+        </b-button>
+      </b-button-group>
     </b-col>
     <div class="w-100"></div>
-    <b-col cols="12" class="mt-3" v-if="editMode">
+    <b-col cols="12" class="mt-4" v-if="editMode">
       <contenteditable
         :class="{ 'edit-mode': editMode }"
         class="artist"
@@ -97,6 +108,9 @@ export default {
     async save() {
       await this.updatePost({ postId: this.post._id, changes: this.post });
       this.editMode = false;
+    },
+    play() {
+      window.open(this.post.spotifyLink, "_blank");
     }
   }
 };
@@ -114,6 +128,7 @@ export default {
   word-wrap: break-word;
 }
 .lyric-card {
+  cursor: default;
   background: #80133677;
   margin: 8px;
   margin-bottom: 16px;
@@ -121,6 +136,10 @@ export default {
   box-shadow: #80133677;
   padding: 16px;
   border-radius: 5px;
+  transition: background 0.15s;
+}
+.lyric-card:hover {
+  background: #801336dd;
 }
 .track {
   color: #ffffff99;
@@ -131,14 +150,20 @@ export default {
     0 22.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086),
     0 100px 80px rgba(0, 0, 0, 0.12);
 }
-.icons {
+.icon {
   color: white;
 }
-.icons svg {
+.icon svg {
   cursor: pointer;
 }
 
 .edit-mode {
   border-bottom: 1px solid white;
+}
+.grow {
+  transition: all 0.2s ease-in-out;
+}
+.grow:hover {
+  transform: scale(1.02);
 }
 </style>
