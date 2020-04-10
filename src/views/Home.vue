@@ -58,12 +58,12 @@
           >
             <transition-group name="list" tag="div">
               <SingleLyric
-                v-for="(item, index) in quotes"
+                v-for="(item, index) in posts"
                 class="list-item"
                 :key="index"
                 :lyric="item.lyric"
                 :artist="item.artist"
-                :track="item.track"
+                :track="item.songName"
               />
             </transition-group>
 
@@ -80,37 +80,36 @@
 <script>
 import SingleLyric from "../components/SingleLyric";
 import AddLyric from "../components/AddLyric";
+import { mapActions, mapState } from "vuex";
 export default {
   components: { SingleLyric, AddLyric },
   data() {
     return {
       loading: false,
       editMode: false,
-      quotes: [
-        {
-          artist: "Redd",
-          track: "Beni Sevdi Benden Çok",
-          lyric: "O hayatımın çocuk yanıydı."
-        }
-      ],
       newLyric: null
     };
   },
+  async created() {
+    await this.listPosts();
+    console.log(this.posts);
+  },
+  computed: {
+    ...mapState(["posts"])
+  },
   methods: {
+    ...mapActions(["listPosts", "createPost"]),
     toggle() {
       this.editMode = !this.editMode;
     },
-    saveLyric() {
+    async saveLyric() {
       this.loading = true;
-      setTimeout(() => {
-        this.loading = false;
-
-        this.quotes.push({ ...this.newLyric });
-        this.newLyric.artist = null;
-        this.newLyric.track = null;
-        this.newLyric.lyric = null;
-        this.$refs.artist.$el.focus();
-      }, 600);
+      await this.createPost({ ...this.newLyric });
+      this.newLyric.artist = null;
+      this.newLyric.songName = null;
+      this.newLyric.lyric = null;
+      this.newLyric.spotifyURL = null;
+      this.loading = false;
     }
   }
 };

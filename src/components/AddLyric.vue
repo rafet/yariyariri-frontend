@@ -10,7 +10,7 @@
     </b-col>
     <b-col cols="3" class="track">
       <b-input
-        v-model="data.track"
+        v-model="data.songName"
         placeholder="Şarkı"
         class="lyric-input"
       ></b-input>
@@ -39,8 +39,9 @@ export default {
     return {
       data: {
         artist: null,
-        track: null,
-        lyric: null
+        songName: null,
+        lyric: null,
+        spotifyURL: null
       }
     };
   },
@@ -48,7 +49,7 @@ export default {
     "data.artist"() {
       this.$emit("input", this.data);
     },
-    "data.track"() {
+    "data.songName"() {
       this.$emit("input", this.data);
     },
     "data.lyric"() {
